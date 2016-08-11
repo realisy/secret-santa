@@ -37,8 +37,6 @@ post '/login' do
   end
 end
 
-
-
 get '/users' do
   @users = User.all
   erb :'users/index'
