@@ -11,6 +11,63 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20160811155247) do
+
+  create_table "cities", force: :cascade do |t|
+    t.string   "city_name"
+    t.string   "province"
+    t.string   "country"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.string   "event_name"
+    t.text     "event_description"
+    t.date     "start_date"
+    t.date     "registration_deadline"
+    t.date     "event_date"
+    t.boolean  "public"
+    t.integer  "max_participants"
+    t.decimal  "min_value"
+    t.decimal  "max_value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "city_id"
+    t.integer  "user_id"
+  end
+
+  add_index "events", ["city_id"], name: "index_events_on_city_id"
+  add_index "events", ["user_id"], name: "index_events_on_user_id"
+
+  create_table "events_users", id: false, force: :cascade do |t|
+    t.integer "user_id",  null: false
+    t.integer "event_id", null: false
+  end
+
+  create_table "gifts", force: :cascade do |t|
+    t.string   "gift_name"
+    t.text     "gift_description"
+    t.decimal  "est_value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "gifts_users", id: false, force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "gift_id", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "email"
+    t.string   "password_digest"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "city_id"
+  end
+
+  add_index "users", ["city_id"], name: "index_users_on_city_id"
 
 end
