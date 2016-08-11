@@ -1,19 +1,63 @@
+def check_login
+  @user = User.find_by(id: session[:user_id])
+  unless @user
+    session[:login_error] = "You must be logged in"
+    redirect '/login'
+  end
+end
+
 # Homepage (Root path)
 get '/' do
+  # binding.pry
   erb :index
 end
+
+get '/login' do
+  @message = session[:message]
+  erb :'users/login'
+end
+
+post '/login' do
+  email = params[:email]
+  password = params[:password]
+  # We're using has_secure_password on User, so we'll check the password using
+  # User#authenticate. Now, because we can get a wrong email too, we can have
+  # a situation where User.find_by(email ...) will return nil, blowing up
+  # on authenticate. To avoid that we'll use the .try() method, which
+  # automatically stops if we get a nil from User#find_by.
+  user = User.find_by(email: email).try(:authenticate, password)
+  if user
+    session.delete(:login_error) # Login successful, delete login error message
+    session[:user_id] = user.id
+    redirect '/events'
+  else
+    session.delete(:user_id) # Just to make sure we're logged out
+    session[:message] = "Incorrect Username or password!"
+    redirect '/login'
+  end
+end
+
+
 
 get '/users' do
   @users = User.all
   erb :'users/index'
 end
 
-get '/users/new' do
-  erb :'users/register'
-end
-
 post '/users' do
-  @user.create
+  @city = City.find_by_city_name(params[:city_name]) || City.new
+  @city.city_name = params[:city_name]
+  @city.province = params[:province]
+  @city.country = params[:country]
+  @city.save
+  @user = User.new
+  @user.first_name = params[:first_name]
+  @user.last_name = params[:last_name]
+  @user.email = params[:email]
+  @user.password = params[:password]
+  @user.city = @city
+  @user.save
+  redirect '/events'
 end
 
 get '/users/:id' do
@@ -26,21 +70,21 @@ get '/users/:id/edit' do
   erb :'users/edit'
 end
 
-put 'users/:id' do
+put '/users/:id' do
   @user = User.find(params[:id])
   @user.first_name = params[:first_name]
   @user.last_name = params[:last_name]
   @user.email = params[:email]
-  @user.password = params[:password]
+  @user.password = params[:password] unless params[:password].nil?
   @user.save
-  redirect "/users/params[:id]"
-end
-
-delete 'users/:id' do
-  @user = User.find(params[:id])
-  @user.destroy
   redirect "/users"
 end
+
+# delete 'users/:id' do
+#   @user = User.find(params[:id])
+#   @user.destroy
+#   redirect "/users"
+# end
 
 #----------------------------------
 
