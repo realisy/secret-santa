@@ -4,7 +4,7 @@ get '/' do
 end
 
 get '/users' do
-  @user = User.all
+  @users = User.all
   erb :'users/index'
 end
 
@@ -52,7 +52,7 @@ get '/events' do
 end
 
 get '/events/new' do
-  erb :'/events/new'
+  erb :'events/new'
 end
 
 post '/events' do
@@ -75,12 +75,12 @@ end
 
 get '/events/:id' do
   @event = Events.find(params[:id])
-  erb :'/events/details'
+  erb :'events/details'
 end
 
-get '/events/:id/edit'
+get '/events/:id/edit' do
   @event = Events.find(params[:id])
-  erb :'/events/edit'
+  erb :'events/edit'
 end
 
 put 'events/:id' do
@@ -114,7 +114,7 @@ get '/gifts' do
 end
 
 get '/gifts/new' do
-  erb :'/gifts/new'
+  erb :'gifts/new'
 end
 
 post '/gifts' do
@@ -129,12 +129,12 @@ end
 
 get '/gifts/:id' do
   @gift = Gift.find(id)
-  erb :'/gifts/details'
+  erb :'gifts/details'
 end
 
-get '/gifts/:id/edit'
+get '/gifts/:id/edit' do
   @gift = Gift.find(id)
-  erb :'/gifts/edit'
+  erb :'gifts/edit'
 end
 
 put 'gifts/:id' do

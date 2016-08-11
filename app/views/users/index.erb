@@ -1,0 +1,7 @@
+<% @users.each do |user| %>
+  <h1><%= user.first_name %><%= user.last_name%></h1>
+  <p><%= user.email %></p>
+  <p><%= user.city.city_name %></p>
+  <p><%= user.city.province %></p>
+  <p><%= user.city.country %></p>
+<% end %>
