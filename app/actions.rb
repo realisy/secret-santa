@@ -1,19 +1,24 @@
 def check_login
   @user = User.find_by(id: session[:user_id])
   unless @user
-    session[:login_error] = "You must be logged in"
+    session[:message] = "You must be logged in"
     redirect '/login'
   end
 end
 
 # Homepage (Root path)
 get '/' do
-  # binding.pry
-  erb :index
+  if session[:user_id]
+    redirect '/events'
+  else
+    @cities = City.all
+    erb :index
+  end
 end
 
 get '/login' do
   @message = session[:message]
+  session.delete(:message) 
   erb :'users/login'
 end
 
@@ -37,12 +42,19 @@ post '/login' do
   end
 end
 
+get '/logout' do
+  session.delete(:user_id)
+  redirect '/'
+end
+
 get '/users' do
+  check_login
   @users = User.all
   erb :'users/index'
 end
 
 post '/users' do
+  check_login
   @city = City.find_by_city_name(params[:city_name]) || City.new
   @city.city_name = params[:city_name]
   @city.province = params[:province]
@@ -78,28 +90,23 @@ put '/users/:id' do
   redirect "/users"
 end
 
-# delete 'users/:id' do
-#   @user = User.find(params[:id])
-#   @user.destroy
-#   redirect "/users"
-# end
-
-#----------------------------------
-
 get '/events' do
-  @event = Event.all
+  check_login
+  binding.pry
+  @events = Event.where('public = ? OR user_id = ?', true, @user.id)
   # Instead of all events, only the ones the user has access
-  # (publics and the ones he is already enrolled)
+  # (publics and the ones he is already enrolled, or has been invited to)
   erb :'events/index'
 end
 
 get '/events/new' do
+  check_login
+  @event = Event.new
   erb :'events/new'
 end
 
 post '/events' do
-  # We need to read the current user
-  #  
+  check_login
   @event = Event.new
   @event.event_name = params[:event_name]
   @event.event_description = params[:event_description]
@@ -111,45 +118,69 @@ post '/events' do
   @event.min_value = params[:min_value]
   @event.max_value = params[:max_value]
   # TODO: Add current user and city to event
+  @event.user = @user
+  @event.city = @user.city
   @event.save
   redirect '/events'
 end
 
 get '/events/:id' do
-  @event = Events.find(params[:id])
+  check_login
+  @event = Event.find(params[:id])
   erb :'events/details'
 end
 
 get '/events/:id/edit' do
-  @event = Events.find(params[:id])
-  erb :'events/edit'
+  check_login
+  @event = Event.find_by(id: params[:id], user: @user)
+  if @event.nil?
+    session[:message] = "Permission Denied"
+    redirect '/login' # TODO: Define best route.
+  else
+    erb :'events/edit'
+  end
 end
 
-put 'events/:id' do
-  @event = Events.find(params[:id])
-  @event.event_name = params[:event_name]
-  @event.event_description = params[:event_description]
-  @event.start_date = params[:start_date]
-  @event.registration_deadline = params[:registration_deadline]
-  @event.event_date = params[:event_date]
-  @event.public = params[:public]
-  @event.max_participants = params[:max_participants]
-  @event.min_value = params[:min_value]
-  @event.max_value = params[:max_value]
-  # TODO: Add current user and city to event
-  @event.save
-  redirect "/events/params[:id]"
+put '/events/:id' do
+  check_login
+  @event = Event.find_by(id: params[:id], user: @user)
+  if @event.nil?  
+    session[:message] = "Permission Denied"
+    redirect '/login' # TODO: Define best route.
+  else
+    @event = Event.find(params[:id])
+    @event.event_name = params[:event_name]
+    @event.event_description = params[:event_description]
+    @event.start_date = params[:start_date]
+    @event.registration_deadline = params[:registration_deadline]
+    @event.event_date = params[:event_date]
+    @event.public = params[:public]
+    @event.max_participants = params[:max_participants]
+    @event.min_value = params[:min_value]
+    @event.max_value = params[:max_value]
+    @event.user = @user
+    @event.city = @user.city
+    @event.save
+    redirect "/events/#{params[:id]}"
+  end
 end
 
-delete 'events/:id' do
-  @event = Events.find(params[:id])
-  @event.destroy
-  redirect '/events'
+delete '/events/:id' do
+  check_login
+  @event = Event.find_by(id: params[:id], user: @user)
+  if @event.nil?  
+    session[:message] = "Permission Denied"
+    redirect '/login' # TODO: Define best route.
+  else
+    @event.destroy
+    redirect '/events'
+  end
 end
 
 #---------------------------------
 
-get '/gifts' do
+get '/users/:user_id/gifts' do
+  check_login
   @gift = Gift.all
   # TODO: Define what should be seen by user
   erb :'gifts/index'

@@ -1,58 +1,39 @@
- <div class="section" id="index-banner">
-  <div class="container">
-    <div class="row">
-      <div class="col s4">
-        Welcome
-      </div>
-      <div class="col s6 offset-s2 loginform">
+ <main class="section valign-wrapper">
+    <div class="row valign">
+      <div class="col s5 offset-s1">
+        <h3 class="header red-text text-lighten-5">Welcome<br></h3>
+        <div class="row"></div>
         <div class="row">
-          <form class="col s12" action="/users" method="post">
-            <div class="row">
-              <div class="input-field col s6">
-                <input id="first_name" name="first_name" type="text" class="validate">
-                <label for="first_name">First Name</label>
-              </div>
-              <div class="input-field col s6">
-                <input id="last_name" name="last_name" type="text" class="validate">
-                <label for="last_name">Last Name</label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s12">
-                <input id="email" name="email" type="email" class="validate">
-                <label for="email">Email</label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s12">
-                <input id="password" name="password" type="password" class="validate">
-                <label for="password">Password</label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s12">
-                <input id="city_name" name="city_name" type="text" class="validate">
-                <label for="city_name">City</label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s7">
-                <input id="province" name="province" type="text" class="validate">
-                <label for="Province">Province/State</label>
-              </div>
-              <div class="input-field col s5">
-                <input id="country" name="country" type="text" class="validate">
-                <label for="country">Country</label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s12 center-align">
-                <button type="submit" class="waves-effect waves-light btn">Register</button>
-              </div>
-            </div>
-          </form>
+          <div class="col s5 offset-s5 center-align">blablablanononon emememelalala</div>
         </div>
       </div>
+      <form class="col s5 loginform" action="/users" method="post">
+        <div class="col s12 center-align"><h5>Register now!</h5></div>
+        <div class="input-field col s12">
+          <input id="name" name="name" type="text" class="validate">
+          <label for="name">Name</label>
+        </div>
+        <div class="input-field col s12">
+            <input id="email" name="email" type="email" class="validate">
+            <label for="email">Email</label>
+        </div>
+        <div class="input-field col s12">
+          <input id="password" name="password" type="password" class="validate">
+          <label for="password">Password</label>
+        </div>
+        <div class="input-field col s12">
+          <select name="city_name" id="city_name">
+            <option value="" disabled selected>Choose your option</option>
+            <% @cities.each do |city| %>
+              <option value="<%= city.id%>"><%= city.city_name %>, <%= city.province %>, <%= city.country %></option>
+            <% end %>
+          </select>
+          <label for="city_name">Select City</label>
+        </div>
+        <div class="input-field col s12 center-align">
+          <button type="submit" class="waves-effect waves-light btn">Register</button>
+        </div>
+        <div class="input-field col s12 center-align"></div>
+      </form>
     </div>
-  </div>
-  </div>
+</main>

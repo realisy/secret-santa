@@ -6,30 +6,42 @@
     <!-- Compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
   <link rel="stylesheet" href="/stylesheets/application.css">
-
+  <link rel="stylesheet" href="/stylesheets/nouislider.css">
   <!-- Compiled and minified JavaScript -->
-  <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>  
+  <script src="/javascript/nouislider.min.js"></script>        
   <script src="/javascript/application.js"></script>        
 </head>
 <body>
-  <div class="navbar-fixed">
+  <header class="navbar-fixed">
     <nav>
       <div class="nav-wrapper">
         <div class="container">
-          <img src="images/reindeer_small.jpg" height="36px" alt="" class="circle logo-img">
-          <a href="#" class="brand-logo">Rudolph</a>
+          <img src="/images/reindeer_small.jpg" height="36px" alt="" class="circle logo-img">
+          <a href="/" class="brand-logo">Rudolph</a>
           <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="/login">Login</a></li>
+            <li>
+              <% if session[:user_id] %>
+                <a href="/logout">Logout</a>
+              <% else %>
+                <a href="/login">Login</a>
+              <% end %>
+            </li>
             <li><a href="#!">Help</a></li>
             <li><a href="#!">Contact</a></li>
           </ul>
         </div>
       </div>
     </nav>
-  </div>
-<body>
+    <% if @message %>
+      <script>
+        errorMessage('<%= @message %>');
+      </script>
+    <% end %>
+  </header>
   <%= yield %>
+
 </body>
 </html>
 

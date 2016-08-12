@@ -1,0 +1,58 @@
+    <div class="row">
+      <div class="input-field col s12">
+        <input id="event_name" name="event_name" type="text" value="<%= event.event_name %>" class="validate">
+        <label for="event_name">Event Name</label>
+      </div>
+      <div class="input-field col s12">
+        <textarea id="event_description" name="event_description" type="text" class="materialize-textarea"><%= event.event_description %></textarea>
+        <label for="event_description">Event Description</label>
+      </div>
+      <div class="input-field col s4">
+        <input id="start_date" name="start_date" type="date" value="<%= event.start_date %>" class="datepicker">
+        <label for="start_date">Start Date</label>
+      </div>
+      <div class="input-field col s4">
+        <input id="registration_deadline" name="registration_deadline" type="date" value="<%= event.registration_deadline %>" class="datepicker">
+        <label for="registration_deadline">Registration Deadline</label>
+      </div>
+      <div class="input-field col s4">
+        <input id="event_date" name="event_date" type="date" value="<%= event.event_date %>" class="datepicker">
+        <label for="event_date">Event Date</label>
+      </div>
+      <div class="row">
+        <div class="input-field col s6">
+          <div class="row">
+            <div class="col s10 offset-s1 ruler" id="value_ruler"></div>
+          </div>
+          <div class="row">
+            <div class="input-field col s3 offset-s3">
+              <input id="min_value" class="active" type="text" value="<%= event.min_value %>" disabled>
+              <label for="min_value">Minimum Value</label>
+            </div>
+            <div class="input-field col s3">
+              <input id="max_value" class="active" type="text" value="<%= event.max_value %>" disabled>
+              <label for="max_value">Maximum Value</label>
+            </div>
+          </div>
+        </div>
+        <div class="input-field col s6">
+          <div class="row">
+            <div class="input-field col s12">
+              <input type="checkbox" class="filled-in" id="filled-in-box" name="public" <%= event.public ? 'checked="checked"' : '' %> />
+              <label for="filled-in-box">Public Event</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              <input type="number" name="max_participants" id="max_participants" value="<%= event.max_participants %>">
+              <label for="max_participants">Maximum Participants</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12 center-align">
+          <button type="submit" class="waves-effect waves-light btn">Save</button>
+        </div>
+      </div>
+    </div>

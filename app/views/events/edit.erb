@@ -1,0 +1,28 @@
+<main class="loginform container">   
+  <div class="row">
+    <div class="col s6"><h4>Edit Event</h4></div>
+  </div>   
+  <form class="col s12" action="/events/<%= @event.id %>" method="POST">
+    <input type="hidden" name="_method" value="PUT">
+    <%= erb :'events/_form', locals: {event: @event} %>
+  </form>
+  <script>
+    var slider = document.getElementById('value_ruler');
+    noUiSlider.create(slider, {
+      start: [<%= @event.min_value || 20 %>, <%= @event.max_value || 100 %>],
+      connect: true,
+      step: 1,
+      range: {
+        'min': 0,
+        'max': 200
+      }
+    });
+    var limitFieldMin = document.getElementById('min_value');
+    var limitFieldMax = document.getElementById('max_value');
+    slider.noUiSlider.on('update', function( values, handle ){
+      (handle ? limitFieldMax : limitFieldMin).value = values[handle];
+    });
+  </script>
+</main>
+
+
