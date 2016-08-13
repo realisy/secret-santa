@@ -18,6 +18,7 @@ def find_events(user)
             e.public_event = ?  OR
             e.creator_id = ?       OR
             u.id = ?", true, user.id, user.id])
+end
 
 def configure_pony
   Pony.options = {
