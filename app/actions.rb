@@ -18,10 +18,26 @@ def find_events(user)
             e.public_event = ?  OR
             e.creator_id = ?       OR
             u.id = ?", true, user.id, user.id])
+
+def configure_pony
+  Pony.options = {
+    :via => :smtp,
+    :via_options => {
+      :address              => 'smtp.sendgrid.net',
+      :port                 => '587',
+      :user_name            => 'rudolph.the.helper',
+      :password             => 'SantasHelper1',
+      :authentication       => :plain,
+      :enable_starttls_auto => true,
+      :domain               => 'http://localhost:3000/'
+    }
+  }
+
 end
 
 # Homepage (Root path)
 get '/' do
+  @message = session[:message]
   if session[:user_id]
     redirect '/events'
   else
@@ -30,9 +46,43 @@ get '/' do
   end
 end
 
+get '/help' do
+  erb :help
+end
+
+get '/contact' do
+  erb :contact
+end
+
+post '/contact' do
+  configure_pony
+  name = params[:name]
+  sender_email = params[:email]
+  message = params[:message]
+  logger.error params.inspect
+  begin
+    Pony.mail(
+      :from => "#{name}<#{sender_email}>",
+      :to => 'rudolph.the.helper@gmail.com',
+      :subject =>"#{name} has contacted you",
+      :body => "#{message}",
+    )
+    if session[:user_id]
+      session[:message] = "Thank you for the comment!"
+      redirect '/events'
+    else
+      session[:message] = "Thank you for the comment!"
+      redirect '/'
+    end
+  rescue
+    @exception = $!
+    erb :boom
+  end
+end
+
 get '/login' do
   @message = session[:message]
-  session.delete(:message) 
+  session.delete(:message)
   erb :'users/login'
 end
 
@@ -92,8 +142,7 @@ end
 
 put '/users/:id' do
   @user = User.find(params[:id])
-  @user.first_name = params[:first_name]
-  @user.last_name = params[:last_name]
+  @user.name = params[:name]
   @user.email = params[:email]
   @user.password = params[:password] unless params[:password].nil?
   @user.save
@@ -101,6 +150,7 @@ put '/users/:id' do
 end
 
 get '/events' do
+  @message = session[:message]
   check_login
   # binding.pry
 
@@ -123,7 +173,6 @@ get '/events/new' do
 end
 
 post '/events' do
-  check_login
   @event = Event.new
   @event.event_name = params[:event_name]
   @event.event_description = params[:event_description]
@@ -280,12 +329,11 @@ delete '/users/:user_id/gifts/:id' do
   @gift = Gift.find_by(id: params[:id], user: @user)
   if @gift
     @gift.destroy
-  else 
+  else
     session[:message] = "Gift not found"
   end
   redirect "/users/#{params[:user_id]}/gifts"
 end
-
 
 # =========================================
 # TARGETS ROUTES 
@@ -298,3 +346,4 @@ get '/users/:user_id/targets' do
   # binding.pry
   erb :'targets/index'
 end
+

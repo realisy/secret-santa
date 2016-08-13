@@ -14,11 +14,14 @@ $(document).ready(function() {
       closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
     }
   );
+  $('.collapsible').collapsible({
+  accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+  });
 
 });
 
 
 
 var errorMessage = function(message) {
-  Materialize.toast(message, 10000) 
+  Materialize.toast(message, 10000)
 }

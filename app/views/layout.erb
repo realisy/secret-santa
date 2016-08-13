@@ -10,9 +10,9 @@
   <link rel="stylesheet" href="/stylesheets/nouislider.css">
   <!-- Compiled and minified JavaScript -->
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>  
-  <script src="/javascript/nouislider.min.js"></script>        
-  <script src="/javascript/application.js"></script>        
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+  <script src="/javascript/nouislider.min.js"></script>
+  <script src="/javascript/application.js"></script>
 </head>
 <body>
   <header class="navbar-fixed">
@@ -22,8 +22,8 @@
           <img src="/images/reindeer_small.jpg" height="36px" alt="" class="circle logo-img">
           <a href="/" class="brand-logo">Rudolph</a>
           <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="#!">Help</a></li>
-            <li><a href="#!">Contact</a></li>
+            <li><a href="/help">Help</a></li>
+            <li><a href="/contact">Contact</a></li>
             <li>
               <% if session[:user_id] %>
                   <a href="#" data-activates="slide-out" class="menu"><i class="material-icons">menu</i></a>
@@ -66,4 +66,3 @@
 
 </body>
 </html>
-
