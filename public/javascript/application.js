@@ -8,7 +8,12 @@ $(document).ready(function() {
     selectYears: 15 // Creates a dropdown of 15 years to control year
   });
 
-
+  $('.menu').sideNav({
+      menuWidth: 240, // Default is 240
+      edge: 'right', // Choose the horizontal origin
+      closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
+    }
+  );
 
 });
 

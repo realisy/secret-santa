@@ -5,6 +5,7 @@
   <title>Rudolph - The Secret Santa Helper</title>
     <!-- Compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="/stylesheets/application.css">
   <link rel="stylesheet" href="/stylesheets/nouislider.css">
   <!-- Compiled and minified JavaScript -->
@@ -21,15 +22,15 @@
           <img src="/images/reindeer_small.jpg" height="36px" alt="" class="circle logo-img">
           <a href="/" class="brand-logo">Rudolph</a>
           <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="#!">Help</a></li>
+            <li><a href="#!">Contact</a></li>
             <li>
               <% if session[:user_id] %>
-                <a href="/logout">Logout</a>
+                  <a href="#" data-activates="slide-out" class="menu"><i class="material-icons">menu</i></a>
               <% else %>
                 <a href="/login">Login</a>
               <% end %>
             </li>
-            <li><a href="#!">Help</a></li>
-            <li><a href="#!">Contact</a></li>
           </ul>
         </div>
       </div>
@@ -38,6 +39,27 @@
       <script>
         errorMessage('<%= @message %>');
       </script>
+    <% end %>
+    <% if session[:user_id] %>
+      <% user = User.find(session[:user_id]) %>
+      <ul id="slide-out" class="side-nav">
+       <li><div class="userView">
+        <!-- <img class="background" src="images/office.jpg"> -->
+        <!-- <a href="#!user"><img class="circle" src="images/yuna.jpg"></a> -->
+        <a href="#!name"><span class="name"><%= user.name %></span></a>
+        <a href="#!email"><span class="email"><%= user.email %></span></a>
+      </div></li>
+        <li><a href="#!"><i class="material-icons">face</i>Targets</a></li>
+        <li><div class="divider"></div></li>
+        <li><a class="subheader">Events</a></li>
+        <li><a href="/events"><i class="material-icons">date_range</i>Your Events</a></li>
+        <li><a href="/events/new"><i class="material-icons">create</i>Create Event</a></li>
+        <li><a class="subheader">Wishlist</a></li>
+        <li><a href="/users/<%= session[:user_id] %>/gifts"><i class="material-icons">favorite</i>View</a></li>
+        <li><a href="/users/<%= session[:user_id] %>/gifts/new"><i class="material-icons">create</i>Add Item</a></li>
+        <li><div class="divider"></div></li>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
     <% end %>
   </header>
   <%= yield %>

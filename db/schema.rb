@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160811155247) do
+ActiveRecord::Schema.define(version: 20160813135803) do
 
   create_table "cities", force: :cascade do |t|
     t.string   "city_name"
@@ -64,6 +64,12 @@ ActiveRecord::Schema.define(version: 20160811155247) do
   end
 
   add_index "invitations", ["user_id"], name: "index_invitations_on_user_id"
+
+  create_table "targets", id: false, force: :cascade do |t|
+    t.integer "santa_id"
+    t.integer "recipient_id"
+    t.integer "event_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "name"
