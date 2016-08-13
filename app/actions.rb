@@ -6,6 +6,20 @@ def check_login
   end
 end
 
+def find_events(user)
+  Event.find_by_sql(
+        ["SELECT DISTINCT e.* 
+          FROM events e 
+            LEFT OUTER JOIN events_users eu 
+              ON e.id = eu.event_id  
+            LEFT OUTER JOIN users u
+              ON eu.user_id = u.id
+          WHERE 
+            e.public_event = ?  OR
+            e.creator_id = ?       OR
+            u.id = ?", true, user.id, user.id])
+end
+
 # Homepage (Root path)
 get '/' do
   if session[:user_id]
@@ -54,19 +68,15 @@ get '/users' do
 end
 
 post '/users' do
-  check_login
-  @city = City.find_by_city_name(params[:city_name]) || City.new
-  @city.city_name = params[:city_name]
-  @city.province = params[:province]
-  @city.country = params[:country]
-  @city.save
+  @city = City.find(params[:city_id]) 
   @user = User.new
-  @user.first_name = params[:first_name]
-  @user.last_name = params[:last_name]
+  @user.name = params[:name]
   @user.email = params[:email]
   @user.password = params[:password]
   @user.city = @city
+  # binding.pry
   @user.save
+  session[:user_id] = @user.id
   redirect '/events'
 end
 
@@ -93,9 +103,16 @@ end
 get '/events' do
   check_login
   # binding.pry
-  @events = Event.where('public_event = ? OR user_id = ?', true, @user.id)
-  # Instead of all events, only the ones the user has access
-  # (publics and the ones he is already enrolled, or has been invited to)
+
+  # Selects events that: 
+  # Are public; OR
+  # User has created; OR
+  # User is enrolled
+  # public_events = Event.where(public_event: true)
+  # owned_events = Event.where(user: @user)
+  # part_events = Event.joins(:users).where('events_users.user_id = ?', @user.id)
+  # @events = (public_events + owned_events + part_events).uniq
+  @events = find_events(@user)
   erb :'events/index'
 end
 
@@ -113,13 +130,13 @@ post '/events' do
   @event.start_date = params[:start_date]
   @event.registration_deadline = params[:registration_deadline]
   @event.event_date = params[:event_date]
-  @event.public = params[:public]
+  @event.public_event = params[:public_event]
   @event.max_participants = params[:max_participants]
   @event.min_value = params[:min_value]
   @event.max_value = params[:max_value]
-  # TODO: Add current user and city to event
-  @event.user = @user
+  @event.creator = @user
   @event.city = @user.city
+  @event.users << @event.creator ## ADDS The creator as a participant
   @event.save
   redirect '/events'
 end
@@ -132,7 +149,7 @@ end
 
 get '/events/:id/edit' do
   check_login
-  @event = Event.find_by(id: params[:id], user: @user)
+  @event = Event.find_by(id: params[:id], creator: @user)
   if @event.nil?
     session[:message] = "Permission Denied"
     redirect '/login' # TODO: Define best route.
@@ -143,7 +160,7 @@ end
 
 put '/events/:id' do
   check_login
-  @event = Event.find_by(id: params[:id], user: @user)
+  @event = Event.find_by(id: params[:id], creator: @user)
   if @event.nil?  
     session[:message] = "Permission Denied"
     redirect '/login' # TODO: Define best route.
@@ -154,11 +171,11 @@ put '/events/:id' do
     @event.start_date = params[:start_date]
     @event.registration_deadline = params[:registration_deadline]
     @event.event_date = params[:event_date]
-    @event.public = params[:public]
+    @event.public_event = params[:public_event]
     @event.max_participants = params[:max_participants]
     @event.min_value = params[:min_value]
     @event.max_value = params[:max_value]
-    @event.user = @user
+    @event.creator = @user
     @event.city = @user.city
     @event.save
     redirect "/events/#{params[:id]}"
@@ -167,7 +184,7 @@ end
 
 delete '/events/:id' do
   check_login
-  @event = Event.find_by(id: params[:id], user: @user)
+  @event = Event.where(id: params[:id], creator: @user)
   if @event.nil?  
     session[:message] = "Permission Denied"
     redirect '/login' # TODO: Define best route.
@@ -176,6 +193,24 @@ delete '/events/:id' do
     redirect '/events'
   end
 end
+
+
+get '/events/:id/enroll' do
+  check_login
+  @events = find_events(@user).find(nil) {|event| event.id == params[:id].to_i}
+    binding.pry
+  if @events.nil?
+    session[:message] = "Permission Denied"
+    redirect '/login' # TODO: Define best route.
+  else
+    @event = Event.find(params[:id])
+    @event.users << @user
+    @event.save
+    redirect "/events/#{params[:id]}"
+  end
+end
+
+
 
 #---------------------------------
 
@@ -200,7 +235,7 @@ post '/users/:user_id/gifts' do
   @gift.est_value = params[:est_value]
   @gift.user = @user
   @gift.save
-  redirect "/users/#{params[:user_id]}/gifts/"
+  redirect "/users/#{params[:user_id]}/gifts"
 end
 
 get '/users/:user_id/gifts/:id' do
@@ -210,7 +245,7 @@ get '/users/:user_id/gifts/:id' do
     erb :'gifts/details'
   else
     session[:message] = "Gift not found"
-    redirect "/users/#{params[:user_id]}/gifts/"
+    redirect "/users/#{params[:user_id]}/gifts"
   end
 end
 
@@ -221,7 +256,7 @@ get '/users/:user_id/gifts/:id/edit' do
     erb :'gifts/edit'
   else
     session[:message] = "Gift not found"
-    redirect "/users/#{params[:user_id]}/gifts/"
+    redirect "/users/#{params[:user_id]}/gifts"
   end
 end
 
@@ -236,7 +271,7 @@ put '/users/:user_id/gifts/:id' do
     redirect "/users/#{params[:user_id]}/gifts/#{params[:id]}"
   else
     session[:message] = "Gift not found"
-    redirect "/users/#{params[:user_id]}/gifts/"
+    redirect "/users/#{params[:user_id]}/gifts"
   end
 end
 
@@ -248,6 +283,18 @@ delete '/users/:user_id/gifts/:id' do
   else 
     session[:message] = "Gift not found"
   end
-  redirect "/users/#{params[:user_id]}/gifts/"
+  redirect "/users/#{params[:user_id]}/gifts"
 end
 
+
+# =========================================
+# TARGETS ROUTES 
+# =========================================
+
+
+get '/users/:user_id/targets' do
+  check_login
+  @events = Event.joins(:users).where("users.id = ?", @user.id)
+  # binding.pry
+  erb :'targets/index'
+end

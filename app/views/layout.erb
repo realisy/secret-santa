@@ -49,10 +49,10 @@
         <a href="#!name"><span class="name"><%= user.name %></span></a>
         <a href="#!email"><span class="email"><%= user.email %></span></a>
       </div></li>
-        <li><a href="#!"><i class="material-icons">face</i>Targets</a></li>
+        <li><a href="/users/<%= session[:user_id] %>/targets"><i class="material-icons">face</i>Targets</a></li>
         <li><div class="divider"></div></li>
         <li><a class="subheader">Events</a></li>
-        <li><a href="/events"><i class="material-icons">date_range</i>Your Events</a></li>
+        <li><a href="/events"><i class="material-icons">date_range</i>View</a></li>
         <li><a href="/events/new"><i class="material-icons">create</i>Create Event</a></li>
         <li><a class="subheader">Wishlist</a></li>
         <li><a href="/users/<%= session[:user_id] %>/gifts"><i class="material-icons">favorite</i>View</a></li>

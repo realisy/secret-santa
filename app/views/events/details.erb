@@ -13,15 +13,23 @@
           <p>Maximum Value: <%= @event.max_value %></p>
           <p>Public Event: <%= @event.public_event %></p>
           <p>Max Participants: <%= @event.max_participants %></p>
-          <p>Created By: <%= @event.user.name %></p>
+          <p>Created By: <%= @event.creator.name %></p>
         </div>
-        <% if @event.user == @user %>
           <form class="card-action" action="/events/<%= @event.id %>/delete" method="POST">
-            <input type="hidden" name="_method" value="DELETE">
-            <a href="/events/<%= @event.id %>/edit">Edit</a>
-            <a href="#" class="deleteButton">Delete</a>
+            <a href="/events/<%= @event.id %>">Details</a>
+            <% if @event.creator == @user %>             
+              <input type="hidden" name="_method" value="DELETE">              
+              <a href="/events/<%= @event.id %>/edit">Edit</a>
+              <a href="#" class="deleteButton">Delete</a>
+              <% if @event.registration_deadline < Date.today %>
+                <a href="/events/<%= @event.id %>/assign_targets" %>Assign Targets</a>
+              <% end %>
+            <% elsif @user.events.where(id: @event.id).empty? %>
+              <a href="/events/<%= @event.id %>/enroll" >Enroll</a>
+            <% else %>
+              <a>Enrolled</a>
+            <% end %>
           </form>
-        <% end %>
       </div>
     </div>
   </div>

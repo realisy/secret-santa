@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160813135803) do
+ActiveRecord::Schema.define(version: 20160813161632) do
 
   create_table "cities", force: :cascade do |t|
     t.string   "city_name"
@@ -34,11 +34,11 @@ ActiveRecord::Schema.define(version: 20160813135803) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "city_id"
-    t.integer  "user_id"
+    t.integer  "creator_id"
   end
 
   add_index "events", ["city_id"], name: "index_events_on_city_id"
-  add_index "events", ["user_id"], name: "index_events_on_user_id"
+  add_index "events", ["creator_id"], name: "index_events_on_creator_id"
 
   create_table "events_users", id: false, force: :cascade do |t|
     t.integer "user_id",  null: false
@@ -61,8 +61,10 @@ ActiveRecord::Schema.define(version: 20160813135803) do
     t.string  "email"
     t.string  "invitation_code"
     t.integer "user_id"
+    t.integer "event_id"
   end
 
+  add_index "invitations", ["event_id"], name: "index_invitations_on_event_id"
   add_index "invitations", ["user_id"], name: "index_invitations_on_user_id"
 
   create_table "targets", id: false, force: :cascade do |t|

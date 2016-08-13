@@ -78,7 +78,7 @@ end
   city_id = rand(City.count)+1
   city = City.find(city_id)
   user_id = rand(User.count)+1
-  user = User.find(user_id)
+  creator = User.find(user_id)
 
 
   event_name = Faker::Lorem.sentence(1, true)
@@ -102,7 +102,9 @@ end
     min_value: min_value,
     max_value: max_value,
     city: city,
-    user: user
+    creator: creator
     )
+  event.users << creator
+  event.save!
 
 end

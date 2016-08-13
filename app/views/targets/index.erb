@@ -1,0 +1,17 @@
+<main class="container"> 
+  <div class="row">
+    <% @events.each do |event| %>
+      <div class="col s12 m6">
+        <ul class="collection">
+          <li class="collection-header"><h4><%= event.event_name %></h4></li>
+          <% target = event.targets.where(santa:@user) %>
+          <% if target.empty? %> 
+            <li class="collection-item">No targets Assigned</li>
+          <% else %>
+            <li class="collection-item"><%= target[0].recipient.name %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+</main>

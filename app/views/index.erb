@@ -22,13 +22,13 @@
           <label for="password">Password</label>
         </div>
         <div class="input-field col s12">
-          <select name="city_name" id="city_name">
+          <select name="city_id" id="city_id" class="validade">
             <option value="" disabled selected>Choose your option</option>
             <% @cities.each do |city| %>
               <option value="<%= city.id%>"><%= city.city_name %>, <%= city.province %>, <%= city.country %></option>
             <% end %>
           </select>
-          <label for="city_name">Select City</label>
+          <label for="city_id">Select City</label>
         </div>
         <div class="input-field col s12 center-align">
           <button type="submit" class="waves-effect waves-light btn">Register</button>

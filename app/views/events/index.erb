@@ -14,10 +14,15 @@
           </div>
           <form class="card-action" action="/events/<%= event.id %>/delete" method="POST">
             <a href="/events/<%= event.id %>">Details</a>
-            <% if event.user == @user %>             
-                <input type="hidden" name="_method" value="DELETE">              
-                <a href="/events/<%= event.id %>/edit">Edit</a>
-                <a href="#" class="deleteButton">Delete</a>
+            <% if event.creator == @user %>             
+              <input type="hidden" name="_method" value="DELETE">              
+              <a href="/events/<%= event.id %>/edit">Edit</a>
+              <a href="#" class="deleteButton">Delete</a>
+            <% end %>
+            <% if @user.events.where(id: event.id).empty? %>
+              <a href="/events/<%= event.id %>/enroll" >Enroll</a>
+            <% else %>
+              <a>Enrolled</a>
             <% end %>
           </form>
         </div>
