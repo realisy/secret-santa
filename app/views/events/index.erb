@@ -12,13 +12,14 @@
             <p><%= event.min_value %></p>
             <p><%= event.max_value %></p>
           </div>
-          <% if event.user == @user %>
-            <form class="card-action" action="/events/<%= event.id %>/delete" method="POST">
-              <input type="hidden" name="_method" value="DELETE">
-              <a href="/events/<%= event.id %>/edit">Edit</a>
-              <a href="#" class="deleteButton">Delete</a>
-            </form>
-          <% end %>
+          <form class="card-action" action="/events/<%= event.id %>/delete" method="POST">
+            <a href="/events/<%= event.id %>">Details</a>
+            <% if event.user == @user %>             
+                <input type="hidden" name="_method" value="DELETE">              
+                <a href="/events/<%= event.id %>/edit">Edit</a>
+                <a href="#" class="deleteButton">Delete</a>
+            <% end %>
+          </form>
         </div>
       </div>
     <% end %>

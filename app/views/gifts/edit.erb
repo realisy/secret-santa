@@ -1,0 +1,9 @@
+<main class="loginform container">   
+  <div class="row">
+    <div class="col s6"><h4>Edit Gift</h4></div>
+  </div>   
+  <form class="col s12" action="/users/<%=@user.id%>/gifts/<%=@gift.id%>" method="POST">
+      <input type="hidden" name="_method" value="PUT">
+    <%= erb :'gifts/_form', locals: {gift: @gift} %>
+  </form>
+</main>

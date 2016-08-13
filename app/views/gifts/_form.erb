@@ -1,0 +1,19 @@
+    <div class="row">
+      <div class="input-field col s12">
+        <input id="gift_name" name="gift_name" type="text" value="<%= gift.gift_name %>" class="validate">
+        <label for="gift_name">Gift Name</label>
+      </div>
+      <div class="input-field col s12">
+        <textarea id="gift_description" name="gift_description" type="text" class="materialize-textarea"><%= gift.gift_description %></textarea>
+        <label for="gift_description">Gift Description</label>
+      </div>
+      <div class="input-field col s4">
+        <input id="est_value" name="est_value" type="text" value="<%= gift.est_value %>" class="validate">
+        <label for="est_value">Estimated Value</label>
+      </div>
+      <div class="row">
+        <div class="input-field col s12 center-align">
+          <button type="submit" class="waves-effect waves-light btn">Save</button>
+        </div>
+      </div>
+    </div>

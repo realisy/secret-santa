@@ -12,6 +12,7 @@ gem 'puma'
 gem 'tux'
 gem 'bcrypt'
 gem 'pony'
+gem 'faker'
 # These gems are only installed when run as `bundle install --without production`
 group :development, :test do
   gem 'pry'

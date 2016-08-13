@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(version: 20160811155247) do
     t.date     "start_date"
     t.date     "registration_deadline"
     t.date     "event_date"
-    t.boolean  "public"
+    t.boolean  "public_event"
     t.integer  "max_participants"
     t.decimal  "min_value"
     t.decimal  "max_value"
@@ -51,16 +51,22 @@ ActiveRecord::Schema.define(version: 20160811155247) do
     t.decimal  "est_value"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
   end
 
-  create_table "gifts_users", id: false, force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "gift_id", null: false
+  add_index "gifts", ["user_id"], name: "index_gifts_on_user_id"
+
+  create_table "invitations", force: :cascade do |t|
+    t.string  "name"
+    t.string  "email"
+    t.string  "invitation_code"
+    t.integer "user_id"
   end
+
+  add_index "invitations", ["user_id"], name: "index_invitations_on_user_id"
 
   create_table "users", force: :cascade do |t|
-    t.string   "first_name"
-    t.string   "last_name"
+    t.string   "name"
     t.string   "email"
     t.string   "password_digest"
     t.datetime "created_at"

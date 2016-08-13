@@ -1,0 +1,10 @@
+<main class="loginform container">   
+  <div class="row">
+    <div class="col s6"><h4>Create New Gift</h4></div>
+  </div>   
+  <form class="col s12" action="/users/<%=@user.id%>/gifts" method="POST">
+    <%= erb :'gifts/_form', locals: {gift: @gift} %>
+  </form>
+</main>
+
+

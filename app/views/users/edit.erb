@@ -3,13 +3,9 @@
           <form class="col s12" action="/users/<%= @user.id %>" method="POST">
             <input type="hidden" name="_method" value="PUT">
             <div class="row">
-              <div class="input-field col s6">
-                <input id="first_name" name="first_name" type="text" value="<%= @user.first_name %>" class="validate">
-                <label for="first_name">First Name</label>
-              </div>
-              <div class="input-field col s6">
-                <input id="last_name" name="last_name" type="text" value="<%= @user.last_name %>" class="validate">
-                <label for="last_name">Last Name</label>
+              <div class="input-field col s12">
+                <input id="name" name="name" type="text" value="<%= @user.name %>" class="validate">
+                <label for="name">Name</label>
               </div>
             </div>
             <div class="row">

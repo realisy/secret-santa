@@ -92,8 +92,8 @@ end
 
 get '/events' do
   check_login
-  binding.pry
-  @events = Event.where('public = ? OR user_id = ?', true, @user.id)
+  # binding.pry
+  @events = Event.where('public_event = ? OR user_id = ?', true, @user.id)
   # Instead of all events, only the ones the user has access
   # (publics and the ones he is already enrolled, or has been invited to)
   erb :'events/index'
@@ -181,48 +181,73 @@ end
 
 get '/users/:user_id/gifts' do
   check_login
-  @gift = Gift.all
-  # TODO: Define what should be seen by user
+  @gifted_user = User.find(params[:user_id])
+  @gifts = Gift.where(user: @gifted_user)
   erb :'gifts/index'
 end
 
-get '/gifts/new' do
+get '/users/:user_id/gifts/new' do
+  check_login
+  @gift = Gift.new
   erb :'gifts/new'
 end
 
-post '/gifts' do
+post '/users/:user_id/gifts' do
+  check_login
   @gift = Gift.new
   @gift.gift_name = params[:gift_name]
   @gift.gift_description = params[:gift_description]
-  @gift.est_values = params[:est_values]
-  # TODO: ADD THE CURRENT USER
+  @gift.est_value = params[:est_value]
+  @gift.user = @user
   @gift.save
-  redirect '/gifts'
+  redirect "/users/#{params[:user_id]}/gifts/"
 end
 
-get '/gifts/:id' do
-  @gift = Gift.find(id)
-  erb :'gifts/details'
+get '/users/:user_id/gifts/:id' do
+  check_login
+  @gift = Gift.find(params[:id])
+  if @gift
+    erb :'gifts/details'
+  else
+    session[:message] = "Gift not found"
+    redirect "/users/#{params[:user_id]}/gifts/"
+  end
 end
 
-get '/gifts/:id/edit' do
-  @gift = Gift.find(id)
-  erb :'gifts/edit'
+get '/users/:user_id/gifts/:id/edit' do
+  check_login
+  @gift = Gift.find_by(id: params[:id], user: @user)
+  if @gift
+    erb :'gifts/edit'
+  else
+    session[:message] = "Gift not found"
+    redirect "/users/#{params[:user_id]}/gifts/"
+  end
 end
 
-put 'gifts/:id' do
-  @gift = Gift.find(id)
-  @gift.gift_name = params[:gift_name]
-  @gift.gift_description = params[:gift_description]
-  @gift.est_values = params[:est_values]
-  # TODO: ADD THE CURRENT USER
-  @gift.save
-  redirect "/gifts/params[:id]"
+put '/users/:user_id/gifts/:id' do
+  check_login
+  @gift = Gift.find_by(id: params[:id], user: @user)
+  if @gift
+    @gift.gift_name = params[:gift_name]
+    @gift.gift_description = params[:gift_description]
+    @gift.est_value = params[:est_value]
+    @gift.save
+    redirect "/users/#{params[:user_id]}/gifts/#{params[:id]}"
+  else
+    session[:message] = "Gift not found"
+    redirect "/users/#{params[:user_id]}/gifts/"
+  end
 end
 
-delete 'gifts/:id' do
-  @gift = Gift.find(id)
-  @gift.destroy
-  redirect '/gifts'
+delete '/users/:user_id/gifts/:id' do
+  check_login
+  @gift = Gift.find_by(id: params[:id], user: @user)
+  if @gift
+    @gift.destroy
+  else 
+    session[:message] = "Gift not found"
+  end
+  redirect "/users/#{params[:user_id]}/gifts/"
 end
 

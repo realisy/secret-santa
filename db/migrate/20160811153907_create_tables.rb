@@ -1,8 +1,7 @@
 class CreateTables < ActiveRecord::Migration
   def change
     create_table :users do |t|
-      t.string :first_name
-      t.string :last_name
+      t.string :name
       t.string :email
       t.string :password_digest
       t.timestamps
@@ -28,12 +27,17 @@ class CreateTables < ActiveRecord::Migration
       t.date :start_date
       t.date :registration_deadline
       t.date :event_date
-      t.boolean :public
+      t.boolean :public_event
       t.integer :max_participants
       t.decimal :min_value
       t.decimal :max_value
       t.timestamps
     end
 
+    create_table :invitations do |t|
+      t.string :name
+      t.string :email
+      t.string :invitation_code
+    end
   end
 end

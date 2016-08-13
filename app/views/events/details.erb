@@ -11,9 +11,9 @@
           <p>Gift Exchange Date: <%= @event.event_date %></p>
           <p>Minimum Value: <%= @event.min_value %></p>
           <p>Maximum Value: <%= @event.max_value %></p>
-          <p>Public Event: <%= @event.public %></p>
+          <p>Public Event: <%= @event.public_event %></p>
           <p>Max Participants: <%= @event.max_participants %></p>
-          <p>Created By: <%= @event.user.first_name %> <%= @event.user.last_name %></p>
+          <p>Created By: <%= @event.user.name %></p>
         </div>
         <% if @event.user == @user %>
           <form class="card-action" action="/events/<%= @event.id %>/delete" method="POST">

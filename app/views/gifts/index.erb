@@ -1,0 +1,23 @@
+<main class="container"> 
+  <div class="row">
+    <% @gifts.each do |gift| %>
+      <div class="col s12 m6">
+        <div class="card blue-grey darken-1">
+          <div class="card-content white-text">
+            <span class="card-title"><%= gift.gift_name %></span>
+            <p><%= gift.gift_description %></p>
+            <p><%= gift.est_value %></p>
+          </div>
+          <form class="card-action" action="/users/<%= gift.user.id %>/gifts/<%= gift.id %>/delete" method="POST">
+            <a href="/users/<%= gift.user.id %>/gifts/<%= gift.id %>">Details</a>
+            <% if gift.user == @user %>
+              <input type="hidden" name="_method" value="DELETE">
+              <a href="/users/<%= gift.user.id %>/gifts/<%= gift.id %>/edit">Edit</a>
+              <a href="#" class="deleteButton">Delete</a>
+            <% end %>
+          </form>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</main>
