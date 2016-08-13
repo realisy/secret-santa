@@ -6,8 +6,24 @@ def check_login
   end
 end
 
+def configure_pony
+  Pony.options = {
+    :via => :smtp,
+    :via_options => {
+      :address              => 'smtp.sendgrid.net',
+      :port                 => '587',
+      :user_name            => 'rudolph.the.helper',
+      :password             => 'SantasHelper1',
+      :authentication       => :plain,
+      :enable_starttls_auto => true,
+      :domain               => 'http://localhost:3000/'
+    }
+  }
+end
+
 # Homepage (Root path)
 get '/' do
+  @message = session[:message]
   if session[:user_id]
     redirect '/events'
   else
@@ -16,9 +32,43 @@ get '/' do
   end
 end
 
+get '/help' do
+  erb :help
+end
+
+get '/contact' do
+  erb :contact
+end
+
+post '/contact' do
+  configure_pony
+  name = params[:name]
+  sender_email = params[:email]
+  message = params[:message]
+  logger.error params.inspect
+  begin
+    Pony.mail(
+      :from => "#{name}<#{sender_email}>",
+      :to => 'rudolph.the.helper@gmail.com',
+      :subject =>"#{name} has contacted you",
+      :body => "#{message}",
+    )
+    if session[:user_id]
+      session[:message] = "Thank you for the comment!"
+      redirect '/events'
+    else
+      session[:message] = "Thank you for the comment!"
+      redirect '/'
+    end
+  rescue
+    @exception = $!
+    erb :boom
+  end
+end
+
 get '/login' do
   @message = session[:message]
-  session.delete(:message) 
+  session.delete(:message)
   erb :'users/login'
 end
 
@@ -54,19 +104,14 @@ get '/users' do
 end
 
 post '/users' do
-  check_login
-  @city = City.find_by_city_name(params[:city_name]) || City.new
-  @city.city_name = params[:city_name]
-  @city.province = params[:province]
-  @city.country = params[:country]
-  @city.save
+  @city = City.find(params[:city_id])
   @user = User.new
-  @user.first_name = params[:first_name]
-  @user.last_name = params[:last_name]
+  @user.name = params[:name]
   @user.email = params[:email]
   @user.password = params[:password]
   @user.city = @city
   @user.save
+  session[:user_id]=@user.id
   redirect '/events'
 end
 
@@ -82,8 +127,7 @@ end
 
 put '/users/:id' do
   @user = User.find(params[:id])
-  @user.first_name = params[:first_name]
-  @user.last_name = params[:last_name]
+  @user.name = params[:name]
   @user.email = params[:email]
   @user.password = params[:password] unless params[:password].nil?
   @user.save
@@ -91,6 +135,7 @@ put '/users/:id' do
 end
 
 get '/events' do
+  @message = session[:message]
   check_login
   # binding.pry
   @events = Event.where('public_event = ? OR user_id = ?', true, @user.id)
@@ -106,14 +151,13 @@ get '/events/new' do
 end
 
 post '/events' do
-  check_login
   @event = Event.new
   @event.event_name = params[:event_name]
   @event.event_description = params[:event_description]
   @event.start_date = params[:start_date]
   @event.registration_deadline = params[:registration_deadline]
   @event.event_date = params[:event_date]
-  @event.public = params[:public]
+  @event.public_event = params[:public]
   @event.max_participants = params[:max_participants]
   @event.min_value = params[:min_value]
   @event.max_value = params[:max_value]
@@ -144,7 +188,7 @@ end
 put '/events/:id' do
   check_login
   @event = Event.find_by(id: params[:id], user: @user)
-  if @event.nil?  
+  if @event.nil?
     session[:message] = "Permission Denied"
     redirect '/login' # TODO: Define best route.
   else
@@ -168,7 +212,7 @@ end
 delete '/events/:id' do
   check_login
   @event = Event.find_by(id: params[:id], user: @user)
-  if @event.nil?  
+  if @event.nil?
     session[:message] = "Permission Denied"
     redirect '/login' # TODO: Define best route.
   else
@@ -245,9 +289,8 @@ delete '/users/:user_id/gifts/:id' do
   @gift = Gift.find_by(id: params[:id], user: @user)
   if @gift
     @gift.destroy
-  else 
+  else
     session[:message] = "Gift not found"
   end
   redirect "/users/#{params[:user_id]}/gifts/"
 end
-

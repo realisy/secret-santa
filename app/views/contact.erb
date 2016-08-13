@@ -1,0 +1,33 @@
+<main class="section valign-wrapper">
+  <div class="row valign">
+    <form action="/contact" method="post" class="contactform col s10 offset-s1">
+      <div class="row">
+
+        <div class="col s12 center-align"><h4>Contact Us</h4></div>
+
+        <div class="input-field col s12 center-align">
+          <input type="text" name="name">
+          <label for="name">Your Name</label>
+        </div>
+
+        <div class="input-field col s12 center-align">
+          <input type="text" name="email" required>
+          <label for="email">Your email address <span style="font-weight: bolder; color: red;">*</span></label>
+        </div>
+
+        <div class="input-field col s12 center-align">
+          <textarea name="message"id="textarea1" class="materialize-textarea" length="500" required></textarea>
+          <label for="to">Your message <span style="font-weight: bolder; color: red;">*</span></label>
+        </div>
+
+        <div class="input-field col s12 center-align">
+          <button type="submit" class="waves-effect waves-light btn" value="Send">Submit</button>
+        </div>
+
+        <div class="input-field col s12 center-align">
+          <p class="formklein">All fields marked with <span style="font-weight: bolder; color: red;">*</span> are required.</p>
+        </div>
+      </div>
+    </form>
+  </div>
+</main>
