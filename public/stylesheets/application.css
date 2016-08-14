@@ -53,3 +53,7 @@ li div p{
 .ruler {
   margin: 25px;
 }
+
+.bold {
+  font-weight: 700;
+}

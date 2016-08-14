@@ -1,0 +1,43 @@
+          <li>
+            <div class="collapsible-header"><%= event.event_name %></div>
+            <div class="collapsible-body grey lighten-2">
+              <div class="row">
+              <div class="col s10">
+                <p>
+                Description: <%= event.event_description %><br>
+                Registration Deadline: <%= event.registration_deadline %><br>
+                Event Date: <%= event.event_date %><br> 
+                </p>
+                <p>
+                <% if @user.events.where(id: event.id).empty? %>
+                  <a href="/events/<%= event.id %>/enroll">Enroll</a>
+                <% else %>
+                  Already Enrolled
+                <% end %>
+                </p>
+              </div>
+              <form class="col s2" action="/events/<%= event.id %>" method="POST">
+                <p>
+                  <a class="btn-floating btn-large waves-effect waves-light red tooltipped" 
+                    href="/events/<%= event.id %>"
+                    data-position="left" data-delay="50" data-tooltip="Details">
+                    <i class="material-icons">description</i>
+                  </a>
+                <% if event.creator == @user %>             
+                  <input type="hidden" name="_method" value="DELETE">              
+                  <a class="btn-floating btn-large waves-effect waves-light red tooltipped" 
+                    href="/events/<%= event.id %>/edit"
+                    data-position="left" data-delay="50" data-tooltip="Edit">
+                    <i class="material-icons">mode_edit</i>
+                  </a>
+                  <button type="submit" class="btn-floating btn-large waves-effect waves-light red tooltipped"
+                    onclick="return confirm('Are you sure?')" 
+                    data-position="left" data-delay="50" data-tooltip="Delete">
+                    <i class="material-icons">delete</i>
+                  </button>
+                <% end %>
+                </p>
+              </form>
+            </div>
+            </div>
+          </li>

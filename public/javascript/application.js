@@ -42,3 +42,9 @@ $(document).ready(function() {
 var errorMessage = function(message) {
   Materialize.toast(message, 10000)
 }
+
+
+function confirm_delete() {
+    confirm("Are you sure?");
+}
+
