@@ -105,6 +105,14 @@ end
     creator: creator
     )
   event.users << creator
+
+  rand(20).times do
+    user = User.find(rand(20)+1)
+    if event.users.where("users.id = ?", user.id).empty?
+      event.users << user
+    end
+  end
+
   event.save!
 
 end

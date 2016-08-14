@@ -21,6 +21,7 @@
               <input type="hidden" name="_method" value="DELETE">              
               <a href="/events/<%= @event.id %>/edit">Edit</a>
               <a href="#" class="deleteButton">Delete</a>
+              <a href="/events/<%= @event.id %>/invite">Invite</a>
               <% if @event.registration_deadline < Date.today %>
                 <a href="/events/<%= @event.id %>/assign_targets" %>Assign Targets</a>
               <% end %>

@@ -1,0 +1,10 @@
+<main class="loginform container">   
+  <div class="row">
+    <div class="col s6"><h4>Send Invitations for Event</h4></div>
+  </div>   
+  <form class="col s12" action="/events/<%=@event.id%>/invite" method="POST">
+    <%= erb :'invitations/_form', locals: {event: @event} %>
+  </form>
+</main>
+
+
