@@ -1,5 +1,7 @@
 
 get '/users' do
+  @message = session[:message]
+  session.delete(:message)
   check_login
   @users = User.all
   erb :'users/index'
@@ -19,11 +21,15 @@ post '/users' do
 end
 
 get '/users/:id' do
+  @message = session[:message]
+  session.delete(:message)
   @user = User.find(params[:id])
   erb :'users/details'
 end
 
 get '/users/:id/edit' do
+  @message = session[:message]
+  session.delete(:message)
   @user = User.find(params[:id])
   erb :'users/edit'
 end

@@ -1,5 +1,7 @@
 
 get '/users/:user_id/gifts' do
+  @message = session[:message]
+  session.delete(:message)
   check_login
   @gifted_user = User.find(params[:user_id])
   @gifts = Gift.where(user: @gifted_user)
@@ -7,6 +9,8 @@ get '/users/:user_id/gifts' do
 end
 
 get '/users/:user_id/gifts/new' do
+  @message = session[:message]
+  session.delete(:message)
   check_login
   @gift = Gift.new
   erb :'gifts/new'
@@ -24,6 +28,8 @@ post '/users/:user_id/gifts' do
 end
 
 get '/users/:user_id/gifts/:id' do
+  @message = session[:message]
+  session.delete(:message)
   check_login
   @gift = Gift.find(params[:id])
   if @gift
@@ -35,6 +41,8 @@ get '/users/:user_id/gifts/:id' do
 end
 
 get '/users/:user_id/gifts/:id/edit' do
+  @message = session[:message]
+  session.delete(:message)
   check_login
   @gift = Gift.find_by(id: params[:id], user: @user)
   if @gift

@@ -1,5 +1,7 @@
 
 get '/contact' do
+  @message = session[:message]
+  session.delete(:message)
   erb :contact
 end
 

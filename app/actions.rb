@@ -10,6 +10,7 @@ require_relative 'routes/contact'
 # Homepage (Root path)
 get '/' do
   @message = session[:message]
+  session.delete(:message)
   if session[:user_id]
     redirect '/events'
   else
@@ -19,6 +20,8 @@ get '/' do
 end
 
 get '/help' do
+  @message = session[:message]
+  session.delete(:message)
   erb :help
 end
 

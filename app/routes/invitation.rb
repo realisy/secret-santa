@@ -4,6 +4,8 @@
 # =========================================
 
 get '/events/:id/invite' do
+  @message = session[:message]
+  session.delete(:message)
   check_login
   @event = Event.where(id: params[:id], creator: @user).first
   if @event.nil?  
@@ -55,6 +57,8 @@ end
 
 
 get '/accept_invite/:invite_code' do
+  @message = session[:message]
+  session.delete(:message)
   # find the invitation
   @cities = City.all
   session[:invite_code] = params[:invite_code]

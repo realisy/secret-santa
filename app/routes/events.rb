@@ -9,6 +9,8 @@ get '/events' do
 end
 
 get '/events/new' do
+  @message = session[:message]
+  session.delete(:message)
   check_login
   @event = Event.new
   erb :'events/new'
@@ -34,6 +36,8 @@ post '/events' do
 end
 
 get '/events/:id' do
+  @message = session[:message]
+  session.delete(:message)
   check_login
   @event = Event.find(params[:id])
   # binding.pry
@@ -41,6 +45,8 @@ get '/events/:id' do
 end
 
 get '/events/:id/edit' do
+  @message = session[:message]
+  session.delete(:message)
   check_login
   @event = Event.find_by(id: params[:id], creator: @user)
   if @event.nil?
@@ -89,6 +95,8 @@ end
 
 
 get '/events/:id/enroll' do
+  @message = session[:message]
+  session.delete(:message)
   check_login
   @events = find_events(@user).find(nil) {|event| event.id == params[:id].to_i}
     # binding.pry
@@ -99,12 +107,15 @@ get '/events/:id/enroll' do
     @event = Event.find(params[:id])
     @event.users << @user
     @event.save
+    session[:message] = "Enrolled!"
     redirect "/events/#{params[:id]}"
   end
 end
 
 
 get '/events/:id/assign_targets' do
+  @message = session[:message]
+  session.delete(:message)
   check_login
   @event = find_events(@user).find(nil) {|event| event.id == params[:id].to_i}
   if @event.nil?

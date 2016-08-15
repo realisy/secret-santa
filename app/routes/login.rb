@@ -25,7 +25,10 @@ post '/login' do
 end
 
 get '/logout' do
+  @message = session[:message]
+  session.delete(:message)
   session.delete(:user_id)
+  session[:message] = "Successfully logged out"
   redirect '/'
 end
 
