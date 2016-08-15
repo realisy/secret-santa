@@ -71,6 +71,26 @@
       <%end%>
     </form>
   </div>
+  
+  <% target = @event.targets.where(santa:@user).first %>
+  <% unless target.nil? %> 
+    <div class="row">
+      <ul class="collection with-header">
+        <li class="collection-header red lighten-2 white-text"><h5>Your Target</h5></li>
+        <li class="collection-item">
+          <div> 
+            <%= target.recipient.name %>
+            <a href="/users/<%= target.recipient.id %>/gifts" 
+              class="secondary-content red-text tooltipped"
+              data-position="left" data-delay="50" data-tooltip="See Wishlist">
+              <i class="material-icons">favorite</i>
+            </a>
+          </div> 
+        </li>
+      </ul>
+    </div>
+  <% end %>
+
   <div class="row">
     <ul class="collection with-header">
       <li class="collection-header red lighten-2 white-text"><h5>Participants</h5></li>

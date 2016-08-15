@@ -8,13 +8,18 @@
                 Registration Deadline: <%= event.registration_deadline %><br>
                 Event Date: <%= event.event_date %><br> 
                 </p>
-                <p>
-                <% if @user.events.where(id: event.id).empty? %>
-                  <a href="/events/<%= event.id %>/enroll">Enroll</a>
-                <% else %>
-                  Already Enrolled
+                <% if event.creator != @user  &&  event.public_event %> 
+                  <p>
+                  <% if @user.events.where(id: event.id).empty? %>
+                    <a href="/events/<%= event.id %>/enroll">Enroll</a>
+                  <% else %>
+                    Already Enrolled
+                  <% end %>
+                  </p>
                 <% end %>
-                </p>
+                <% if event.targets_assigned %>
+                  <p class="red-text text-lighten-2">Targets Assigned</p>
+                <% end %>
               </div>
               <form class="col s2" action="/events/<%= event.id %>" method="POST">
                 <p>
