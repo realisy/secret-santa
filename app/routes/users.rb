@@ -14,7 +14,7 @@ post '/users' do
   @user.email = params[:email]
   @user.password = params[:password]
   @user.city = @city
-  # binding.pry
+  # #
   @user.save
   session[:user_id] = @user.id
   redirect '/events'

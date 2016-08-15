@@ -4,7 +4,7 @@ get '/events' do
   session.delete(:message)
   check_login
   @events = find_events(@user)
-  # binding.pry
+  # #
   erb :'events/index'
 end
 
@@ -40,7 +40,7 @@ get '/events/:id' do
   session.delete(:message)
   check_login
   @event = Event.find(params[:id])
-  # binding.pry
+  # #
   erb :'events/details'
 end
 
@@ -76,7 +76,8 @@ put '/events/:id' do
     @event.max_value = params[:max_value]
     @event.creator = @user
     @event.city = @user.city
-    @event.save
+    #
+    @event.save!
     redirect "/events/#{params[:id]}"
   end
 end
@@ -99,7 +100,7 @@ get '/events/:id/enroll' do
   session.delete(:message)
   check_login
   @events = find_events(@user).find(nil) {|event| event.id == params[:id].to_i}
-    # binding.pry
+    # #
   if @events.nil?
     session[:message] = "Permission Denied"
     redirect '/login' # TODO: Define best route.

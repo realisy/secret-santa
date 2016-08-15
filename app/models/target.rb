@@ -21,7 +21,7 @@ class Target < ActiveRecord::Base
             # both with the same user. If this happens, we will swap the recipient with anoter random Target.
             rand_id = rand(Target.where(event: event).count)
             target = Target.where(event: event)[rand_id]
-            binding.pry
+            #
             temp_recipient = target.recipient
             target.recipient = @recipient
             @recipient = temp_recipient 

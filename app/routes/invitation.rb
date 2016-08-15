@@ -64,9 +64,9 @@ get '/accept_invite/:invite_code' do
   session[:invite_code] = params[:invite_code]
   @invited = Invitation.find_by(invitation_code: params[:invite_code])
   # render the form
-  # binding.pry
+  # #
   @user = User.where(email: @invited.email).first
-  binding.pry
+  #
   if @user
     @event = @invited.event
     @event.users << @user
@@ -86,7 +86,7 @@ post '/accept_invite' do
   @user.email = @invited.email
   @user.password = params[:password]
   @user.city = @city
-  # binding.pry
+  # #
   @user.save
   session[:user_id] = @user.id
 
