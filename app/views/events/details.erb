@@ -1,13 +1,24 @@
 <div class="fixed-action-btn">
-      <a class="btn-floating btn-large red tooltipped" href="/events/new"
+      <a class="btn-floating btn-large red">
+        <i class="large material-icons">expand_less</i>
+      </a>
+    <ul>
+      <li>
+        <a href="/events" class="btn-floating red tooltipped"
+          data-position="left" data-delay="50" data-tooltip="Back">
+          <i class="material-icons">arrow_back</i>
+        </a>
+      </li>
+      <a class="btn-floating red tooltipped" href="/events/new"
        data-position="left" data-delay="50" data-tooltip="New Event">
         <i class="large material-icons">add</i>
       </a>
+    </ul>
 </div>
 
-<main class="container valign-wrapper">
-  <div class=" row valign loginform">
-  <div class="col s12"><h3><%= @event.event_name %></h3></div>
+<main class="container loginform">
+  <div class="row">
+    <div class="col s12"><h3><%= @event.event_name %></h3></div>
     <div class="col s10">
         <div class="col s12">Description: <%= @event.event_description %></div>
         <div class="col s12">Where: <%= @event.city.city_name %></div>
@@ -18,6 +29,7 @@
         <div class="col s12">Maximum Value: <%= @event.max_value %></div>
         <div class="col s12">Public Event: <%= @event.public_event %></div>
         <div class="col s12">Max Participants: <%= @event.max_participants %></div>
+        <div class="col s12">Current Participants: <%= @event.users.count %></div>
         <div class="col s12">Created By: <%= @event.creator.name %></div>
         <div class="col s12">
           <% if @user.events.where(id: @event.id).empty? %>
@@ -27,40 +39,53 @@
           <% end %>
         </div>
     </div>
-    <form class="col s2" action="/events/<%= @event.id %>/delete" method="POST">
-      <p>
-            <% if @event.creator == @user %>             
-              <input type="hidden" name="_method" value="DELETE">              
-              <a class="btn-floating btn-large waves-effect waves-light red tooltipped"
-                href="/events/<%= @event.id %>/edit"
-                data-position="left" data-delay="50" data-tooltip="Edit">
-                <i class="material-icons">mode_edit</i>
-              </a></p>
-              <p>
-              <button type="submit" class="btn-floating btn-large waves-effect waves-light red tooltipped"
-                    onclick="return confirm('Are you sure?')" 
-                    data-position="left" data-delay="50" data-tooltip="Delete">
-                    <i class="material-icons">delete</i>
-              </button></p>
-              <p>
-                <a class="btn-floating btn-large waves-effect waves-light red tooltipped"
-                  href="/events/<%= @event.id %>/invite"
-                  data-position="left" data-delay="50" data-tooltip="Invite">
-                  <i class="material-icons">person_add</i>
-                </a>
-              </p>
-              <% if @event.registration_deadline < Date.today %>
-                <p><a class="btn-floating btn-large waves-effect waves-light red tooltipped"
-                      href="/events/<%= @event.id %>/assign_targets"
-                      data-position="left" data-delay="50" data-tooltip="Assign Targets">
-                    <i class="material-icons">assignment_ind</a>
-                </p>
-              <% end %>
-            <%end%>
-      </form>
-    </div>
+    <form class="col s1 right-align" action="/events/<%= @event.id %>/delete" method="POST">
+      <% if @event.creator == @user %>             
+        <input type="hidden" name="_method" value="DELETE">              
+        <a class="btn-floating btn-large waves-effect waves-light red tooltipped"
+          href="/events/<%= @event.id %>/edit"
+          data-position="left" data-delay="50" data-tooltip="Edit">
+          <i class="material-icons">mode_edit</i>
+        </a>
+        <button type="submit" class="btn-floating btn-large waves-effect waves-light red tooltipped"
+              onclick="return confirm('Are you sure?')" 
+              data-position="left" data-delay="50" data-tooltip="Delete">
+              <i class="material-icons">delete</i>
+        </button>
+        <a class="btn-floating btn-large waves-effect waves-light red tooltipped"
+            href="/events/<%= @event.id %>/invite"
+            data-position="left" data-delay="50" data-tooltip="Invite">
+            <i class="material-icons">person_add</i>
+        </a>
+        <% if @event.registration_deadline < Date.today %>
+          <a class="btn-floating btn-large waves-effect waves-light red tooltipped"
+                href="/events/<%= @event.id %>/assign_targets"
+                data-position="left" data-delay="50" data-tooltip="Assign Targets">
+            <i class="material-icons">assignment_ind</i>
+          </a> 
+        <% end %>
+      <%end%>
+    </form>
+  </div>
+  <div class="row">
+    <ul class="collection with-header">
+      <li class="collection-header red lighten-2 white-text"><h5>Participants</h5></li>
+      <% @event.users.each do |participant| %>
+        <li class="collection-item">
+        <div>
+            <%= participant.name %>
+            <a href="/users/<%= participant.id %>/gifts" 
+              class="secondary-content red-text tooltipped"
+              data-position="left" data-delay="50" data-tooltip="See Wishlist">
+              <i class="material-icons">favorite</i>
+            </a>
+          </div>
+        </li>
+      <% end %>
+    </ul>
   </div>
 </main>
+
 
 
   

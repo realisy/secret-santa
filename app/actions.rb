@@ -4,6 +4,7 @@ require_relative 'routes/events'
 require_relative 'routes/gifts'
 require_relative 'routes/invitation'
 require_relative 'routes/login'
+require_relative 'routes/targets'
 require_relative 'routes/contact'
 
 # Homepage (Root path)

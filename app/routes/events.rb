@@ -35,6 +35,7 @@ end
 get '/events/:id' do
   check_login
   @event = Event.find(params[:id])
+  # binding.pry
   erb :'events/details'
 end
 

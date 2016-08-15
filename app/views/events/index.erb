@@ -9,7 +9,7 @@
   <div class="row">
     <ul class="collapsible" data-collapsible="accordion">
       <li>
-        <div class="collapsible-header blue-grey lighten-2 white-text">Your Events</div>
+        <div class="collapsible-header red lighten-2 white-text">Your Events</div>
       </li>
       <% @events.select{|event| event.creator_id == @user.id}.each do |event| %>
         <%= erb :'events/_event_item', locals: {event: event} %>
@@ -20,7 +20,7 @@
   <div class="row">
     <ul class="collapsible" data-collapsible="accordion">
       <li>
-        <div class="collapsible-header blue-grey lighten-2 white-text">Public Events</div>
+        <div class="collapsible-header red lighten-2 white-text">Public Events</div>
       </li>
       <% @events.select{|event| event.public_event == true && event.creator_id != @user.id}.each do |event| %>
         <%= erb :'events/_event_item', locals: {event: event} %>
@@ -31,7 +31,7 @@
   <div class="row">
     <ul class="collapsible" data-collapsible="accordion">
       <li>
-        <div class="collapsible-header blue-grey lighten-2 white-text">Other Enrolled Events</div>
+        <div class="collapsible-header red lighten-2 white-text">Other Enrolled Events</div>
       </li>
       <% @events.select{|event| event.public_event == false && event.creator_id != @user.id}.each do |event| %>
         <%= erb :'events/_event_item', locals: {event: event} %>

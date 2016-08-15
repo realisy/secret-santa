@@ -1,17 +1,41 @@
-<main class="container"> 
-  <div class="row">
-    <% @events.each do |event| %>
-      <div class="col s12 m6">
-        <ul class="collection">
-          <li class="collection-header"><h4><%= event.event_name %></h4></li>
-          <% target = event.targets.where(santa:@user) %>
-          <% if target.empty? %> 
-            <li class="collection-item">No targets Assigned</li>
-          <% else %>
-            <li class="collection-item"><%= target[0].recipient.name %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
+  <div class="fixed-action-btn">
+      <a class="btn-floating btn-large red tooltipped" href="/events"
+      data-position="left" data-delay="50" data-tooltip="Back">
+        <i class="large material-icons">arrow_back</i>
+      </a>
   </div>
+
+<main class="container loginform"> 
+    <ul class="collection with-header">
+      <li class="collection-header"><h3>Your Targets</h3></li>
+      <% @events.each do |event| %>
+        <li class="collection-item transparent"></li>
+        <li class="collection-item red lighten-2 white-text">
+          <div>
+            <h5>Event: <%= event.event_name %>
+            <a href="/events/<%= event.id %>" 
+              class="secondary-content white-text tooltipped"
+              data-position="left" data-delay="50" data-tooltip="See Event">
+              <i class="material-icons">description</i>
+            </a>
+            </h5>
+          </div>
+        </li>
+            <% target = event.targets.where(santa:@user).first %>
+            <% if target.nil? %> 
+              <li class="collection-item grey lighten-1 grey-text text-lighten-3">No targets Assigned</li>
+            <% else %>
+              <li class="collection-item green accent-2">
+                <div>
+                  <%= target.recipient.name %>
+                  <a href="/users/<%= target.recipient.id %>/gifts" 
+                    class="secondary-content red-text tooltipped"
+                    data-position="left" data-delay="50" data-tooltip="See Wishlist">
+                    <i class="material-icons">favorite</i>
+                  </a>
+                </div>
+              </li>
+            <% end %>
+      <% end %>
+    </ul>
 </main>
