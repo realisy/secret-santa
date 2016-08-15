@@ -52,12 +52,14 @@
               data-position="left" data-delay="50" data-tooltip="Delete">
               <i class="material-icons">delete</i>
         </button>
+        <% if !@event.targets_assigned %>
         <a class="btn-floating btn-large waves-effect waves-light red tooltipped"
             href="/events/<%= @event.id %>/invite"
             data-position="left" data-delay="50" data-tooltip="Invite">
             <i class="material-icons">person_add</i>
         </a>
-        <% if @event.registration_deadline < Date.today %>
+        <% end %>
+        <% if @event.registration_deadline < Date.today && !@event.targets_assigned %>
           <a class="btn-floating btn-large waves-effect waves-light red tooltipped"
                 href="/events/<%= @event.id %>/assign_targets"
                 data-position="left" data-delay="50" data-tooltip="Assign Targets">

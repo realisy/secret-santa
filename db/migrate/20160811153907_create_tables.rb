@@ -27,7 +27,7 @@ class CreateTables < ActiveRecord::Migration
       t.date :start_date
       t.date :registration_deadline
       t.date :event_date
-      t.boolean :public_event
+      t.boolean :public_event, null: false, default: false
       t.integer :max_participants
       t.decimal :min_value
       t.decimal :max_value

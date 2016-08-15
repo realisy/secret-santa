@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160813161632) do
+ActiveRecord::Schema.define(version: 20160815024735) do
 
   create_table "cities", force: :cascade do |t|
     t.string   "city_name"
@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(version: 20160813161632) do
     t.date     "start_date"
     t.date     "registration_deadline"
     t.date     "event_date"
-    t.boolean  "public_event"
+    t.boolean  "public_event",          default: false, null: false
     t.integer  "max_participants"
     t.decimal  "min_value"
     t.decimal  "max_value"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 20160813161632) do
     t.datetime "updated_at"
     t.integer  "city_id"
     t.integer  "creator_id"
+    t.boolean  "targets_assigned",      default: false
   end
 
   add_index "events", ["city_id"], name: "index_events_on_city_id"

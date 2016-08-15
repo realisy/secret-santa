@@ -14,7 +14,7 @@ post '/login' do
   # automatically stops if we get a nil from User#find_by.
   user = User.find_by(email: email).try(:authenticate, password)
   if user
-    session.delete(:login_error) # Login successful, delete login error message
+    session.delete(:message) # Login successful, delete login error message
     session[:user_id] = user.id
     redirect '/events'
   else

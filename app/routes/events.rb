@@ -1,9 +1,10 @@
 
 get '/events' do
   @message = session[:message]
+  session.delete(:message)
   check_login
-  # binding.pry
   @events = find_events(@user)
+  # binding.pry
   erb :'events/index'
 end
 
@@ -63,7 +64,7 @@ put '/events/:id' do
     @event.start_date = params[:start_date]
     @event.registration_deadline = params[:registration_deadline]
     @event.event_date = params[:event_date]
-    @event.public_event = params[:public_event]
+    @event.public_event = params[:public_event] || false
     @event.max_participants = params[:max_participants]
     @event.min_value = params[:min_value]
     @event.max_value = params[:max_value]
@@ -90,7 +91,7 @@ end
 get '/events/:id/enroll' do
   check_login
   @events = find_events(@user).find(nil) {|event| event.id == params[:id].to_i}
-    binding.pry
+    # binding.pry
   if @events.nil?
     session[:message] = "Permission Denied"
     redirect '/login' # TODO: Define best route.
@@ -103,3 +104,17 @@ get '/events/:id/enroll' do
 end
 
 
+get '/events/:id/assign_targets' do
+  check_login
+  @event = find_events(@user).find(nil) {|event| event.id == params[:id].to_i}
+  if @event.nil?
+    session[:message] = "Permission Denied"
+    redirect '/login' # TODO: Define best route.
+  else
+    Target.assign_targets(@event)
+    @event.targets_assigned = true
+    @event.save
+    session[:message] = "Targets Assined!"
+    redirect '/events'
+  end
+end

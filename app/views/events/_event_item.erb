@@ -24,12 +24,14 @@
                     <i class="material-icons">description</i>
                   </a>
                 <% if event.creator == @user %>             
-                  <input type="hidden" name="_method" value="DELETE">              
-                  <a class="btn-floating btn-large waves-effect waves-light red tooltipped" 
-                    href="/events/<%= event.id %>/edit"
-                    data-position="left" data-delay="50" data-tooltip="Edit">
-                    <i class="material-icons">mode_edit</i>
-                  </a>
+                  <input type="hidden" name="_method" value="DELETE">  
+                  <% if !event.targets_assigned %>            
+                    <a class="btn-floating btn-large waves-effect waves-light red tooltipped" 
+                      href="/events/<%= event.id %>/edit"
+                      data-position="left" data-delay="50" data-tooltip="Edit">
+                      <i class="material-icons">mode_edit</i>
+                    </a>
+                  <% end %>
                   <button type="submit" class="btn-floating btn-large waves-effect waves-light red tooltipped"
                     onclick="return confirm('Are you sure?')" 
                     data-position="left" data-delay="50" data-tooltip="Delete">

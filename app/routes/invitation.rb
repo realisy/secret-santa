@@ -47,6 +47,7 @@ post  '/events/:id/invite' do
         puts e.message
       end
     end
+    session[:message] = "Invitation sent"
     redirect "/events/#{params[:id]}"
   end
 end
@@ -59,8 +60,18 @@ get '/accept_invite/:invite_code' do
   session[:invite_code] = params[:invite_code]
   @invited = Invitation.find_by(invitation_code: params[:invite_code])
   # render the form
+  # binding.pry
+  @user = User.where(email: @invited.email).first
   binding.pry
-  erb :'invitations/accept_invite'
+  if @user
+    @event = @invited.event
+    @event.users << @user
+    @invited.destroy
+    session[:user_id] = @user.id
+    redirect '/events'
+  else 
+    erb :'invitations/accept_invite'
+  end
 end
 
 post '/accept_invite' do
