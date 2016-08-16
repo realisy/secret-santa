@@ -21,6 +21,7 @@ configure :production do
   # environment variable. This is a feature of sinatra/activerecord support.
   #
   # If you're deploying to Heroku this will be set automatically.
+ set :database, ENV['DATABASE_URL']
 end
 
 configure do
